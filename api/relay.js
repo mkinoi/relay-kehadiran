@@ -1,4 +1,14 @@
 export default async function handler(req, res) {
+  // ✅ Tambah CORS header
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  // ✅ Tangani preflight OPTIONS request
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
   try {
     if (req.method !== "POST") {
       return res.status(405).json({ error: "Method not allowed" });
@@ -20,7 +30,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // URL Web App Google Apps Script (boleh tukar ke process.env.SCRIPT_DEPLOYMENT_URL jika guna environment variable)
+    // URL Web App Google Apps Script
     const scriptUrl = "https://script.google.com/macros/s/AKfycbzapf2MLplP0Q0rij9esopyjRzchFl7NY-4uMxUZZt1q2E6h5-W-yzePITy3tQ_cbbT/exec";
 
     // Hantar ke Google Sheets melalui Apps Script
